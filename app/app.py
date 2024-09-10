@@ -73,7 +73,7 @@ def recommendations_page():
     response = requests.get(api_url, params=params)
 
     # TMDB API key
-    API_key = os.getenv("TMDB_API_KEY")
+    API_key = st.secrets["TMDB_API_KEY"]    # os.getenv("TMDB_API_KEY")
 
     # our predictions
     if response.status_code == 200:
