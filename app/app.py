@@ -22,7 +22,7 @@ background_image = """
 </style>
 """
 
-# inject the custom CSS with the background image
+# injecting the custom CSS with the background image
 st.markdown(background_image, unsafe_allow_html=True)
 
 
@@ -34,7 +34,7 @@ def input_page():
     # markdown for the welcome text
     st.markdown(
     """
-    ## World's Best Recommendation Engine as rated by at least 3 Le Wagon students and my mom!
+    ## World's Best Recommendation Engine as rated by at least 3 Le Wagon students and their moms!
     """,
     unsafe_allow_html=True
     )
@@ -77,20 +77,20 @@ def recommendations_page():
 
     # our predictions
     if response.status_code == 200:
-        predictions = response.json()
+        titles, tmdb_ids = response.json()
         # creating columns for the posters
 #        cols = st.columns(5)
 
 #       no need for this,it is just the table of predictions
-#        st.write(predictions)
+#        st.write(titles)
 
-        for idx, movie in enumerate(predictions):
-            # create two columns: one for the poster and one for the movie overview
+        for idx, movie in enumerate(titles):
+            # creating two columns: one for the poster and one for the movie overview
             col1, col2 = st.columns([1, 2])  # Adjust the width ratio as needed
 
             with col1:
                 # API request to TMDB to fetch poster
-                tmdb_url_image = "https://api.themoviedb.org/3/movie/862/images"
+                tmdb_url_image = f"https://api.themoviedb.org/3/movie/{tmdb_ids[idx]}/images"
                 headers = {
                             "accept": "application/json",
                             "Authorization": f"Bearer {API_key}"
@@ -109,7 +109,7 @@ def recommendations_page():
 
             with col2:
                 # API request to TMDB to fetch details
-                tmdb_url_details = "https://api.themoviedb.org/3/movie/862?language=en-US"
+                tmdb_url_details = f"https://api.themoviedb.org/3/movie/{tmdb_ids[idx]}?language=en-US"
                 headers = {
                             "accept": "application/json",
                             "Authorization": f"Bearer {API_key}"
