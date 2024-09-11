@@ -83,7 +83,11 @@ good_comments = [
     "No way, that's my favorite!",
     "OK!",
     "Oh right, that's the one with that guy that starred in that other movie right?",
-    "Seriously?"
+    "Seriously?",
+    "Good one.",
+    "Not a fan, but hey, whatevz!",
+    "Good!",
+    "Classic!"
 ]
 
 average_comments = [
@@ -91,7 +95,15 @@ average_comments = [
     "Yeah, no!",
     "Pffft! Seen better...",
     "Yeah, makes sense.",
-    "Aww, you didn't like that?"
+    "Aww, you didn't like that?",
+    "Oh come on!",
+    "Got you.",
+    "Not that bad, come on!",
+    "Well, i liked it...",
+    "Haven't seen it",
+    "LOL yeah.",
+    "I see."
+
 
 ]
 
@@ -201,10 +213,15 @@ def recommendations_page():
             )
 
             for index in range(5):
-                st.write(f"You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0.")
-                st.markdown(f'<p style="font-size:12px;">{comment(history_ratings[index])}</p>', unsafe_allow_html=True)
+                # st.write(f"You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0.")
+                # st.markdown(f'<p style="font-size:12px;">{comment(history_ratings[index])}</p>', unsafe_allow_html=True)
 
-            st.markdown('<p style="font-size:26px;">OK, great, I got you! According to these, here are my suggestions:</p>', unsafe_allow_html=True)
+                st.markdown(f'''
+                                You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0.
+                                <span style="font-size:12px;">{comment(history_ratings[index])}</span>
+                            ''', unsafe_allow_html=True)
+
+            st.markdown('<p style="font-size:26px;">OK, great, I got you! According to your history, here are my suggestions:</p>', unsafe_allow_html=True)
 
         elif len(history_titles) > 1:
 
