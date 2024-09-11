@@ -132,9 +132,10 @@ def recommendations_page():
                 tmdb_json = tmdb_response_details.json()
 
                 if tmdb_response_details.status_code == 200:
-#                    st.write(f"**{movie}**")  # Movie title
-                    st.markdown('<p style="font-size:30px; text-decoration:underline;">f"**{movie}**"</p>', unsafe_allow_html=True)
-                    st.write(f"Overview: {tmdb_json.get('overview')}")
+#                    st.write(f"**{movie}**")  # vanilla streamlit movie title
+                    st.markdown(f'<p style="font-size:30px; text-decoration:underline;">**{movie}**</p>', unsafe_allow_html=True)
+#                    st.write(f"Overview: {tmdb_json.get('overview')}")   # vanilla streamlit overview
+                    st.markdown(f'<p style="font-size:30px; text-decoration:underline; background-color:black;">Overview: {tmdb_json.get('overview')}</p>', unsafe_allow_html=True)
                     st.write(f"Runtime: {tmdb_json.get('runtime')} minutes")
 
                     genre_list_temp = tmdb_json.get('genres')
