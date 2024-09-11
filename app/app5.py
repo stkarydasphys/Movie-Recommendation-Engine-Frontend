@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import random
+
 import os
 from dotenv import load_dotenv
 
@@ -26,6 +27,8 @@ background_image = """
 # injecting the custom CSS with the background image
 st.markdown(background_image, unsafe_allow_html=True)
 
+
+
 # changing the fonts with CSS
 st.markdown("""
     <style>
@@ -38,6 +41,37 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
+
+##### INPUT PAGE #####
+
+def input_page():
+    st.title("Welcome to **Movie Recommendation Engine**! ")
+
+    # markdown for the welcome text
+    st.markdown(
+    """
+    ## Hello! Let me introduce myself, I am MRE, an AI powered Movie Recommendation Engine.
+    """,
+    unsafe_allow_html=True
+    )
+
+    # user input
+    user_id_input = st.number_input("And who might you be? (User ID)",
+                                min_value = 0,
+                                max_value = 2000,
+                                step = 1)
+
+    movie_suggestions = st.slider('How many movies would you like me to suggest?', 1, 15, 1)
+
+#   i use this to make the go back button to work on the first try, but for some reason it bugs some times
+#   st.session_state.page = "recommendations"
+
+    if st.button("Get Recommendations"):
+        # store user input in session state and switch to recommendations page
+        st.session_state.user_id = user_id_input
+        st.session_state.num_recommendations = movie_suggestions
+        st.session_state.page = "recommendations"
+
 
 good_comments = [
     "Yeah, that movie was good!",
@@ -69,6 +103,8 @@ average_comments = [
     "Haven't seen it",
     "LOL yeah.",
     "I see."
+
+
 ]
 
 # function commenting on user's ratings
@@ -84,106 +120,15 @@ def comment(rating):
 
 
 
-##### INPUT PAGE #####
-
-def input_page():
-    st.title("Welcome to **Movie Recommendation Engine**! ")
-
-    # markdown for the welcome text
-    st.markdown(
-    """
-    ## Hello! Let me introduce myself, I am MRE, your Deep Learning powered Movie Recommendation Engine.
-    """,
-    unsafe_allow_html=True
-    )
-
-    # user input
-    user_id_input = st.number_input("And who might you be? (User ID)",
-                                min_value = 0,
-                                max_value = 2000,
-                                step = 1)
-
-    movie_suggestions = st.slider('How many movies would you like me to suggest?', 1, 15, 1)
-
-    # button that triggers history to appear
-    if st.button("Your Rating History"):
-        # API call to fetch the user's history based on their user ID
-        api_url = "https://movie-recommendation-engine-image-194144152402.europe-west1.run.app/predict"
-        params = {"user_id": int(user_id_input), "top_n": int(movie_suggestions)}
-        response = requests.get(api_url, params=params)
-
-        if response.status_code == 200:
-            titles, tmdb_ids, history_titles, history_tmdb_ids, history_ratings = response.json()
-
-            if len(history_titles) > 10:
-                st.markdown(
-                f"""
-                ### Your rating history looks interesting! You have rated {len(history_titles)} movies! Let's see some of them:
-                """,
-                unsafe_allow_html=True
-                )
-
-                for index in range(10):
-                    st.markdown(f'''
-                                    You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0.
-                                    <span style="font-size:12px;">{comment(history_ratings[index])}</span>
-                                ''', unsafe_allow_html=True)
-
-                st.markdown("""<p style="font-size:26px;">OK, great, I got you! Let's see my suggestions according to your history</p>""", unsafe_allow_html=True)
-
-            elif len(history_titles) > 1:
-                st.markdown(
-                f"""
-                ### You have only rated {len(history_titles)} movies! Let's see them:
-                """,
-                unsafe_allow_html=True
-                )
-                for index in range(len(history_titles)):
-                    st.write(f"You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0")
-
-                st.markdown("""<p style="font-size:24px;">Your rating history is rather small, but hey don't worry, I got you covered! Let's see my suggestions:</p>""", unsafe_allow_html=True)
-
-            else:
-                st.markdown(
-                f"""
-                ### Aaah you must be new around here, you have not rated any movies! Alright, let's see some suggestions to get you started:
-                """,
-                unsafe_allow_html=True
-                )
-
-        else:
-            st.write(f"OOPS! Something went wrong! Error code: {response.status_code}")
-
-    # if st.session_state.user_id and st.session_state.num_recommendations:
-    #     st.session_state.page = "recommendations"
 
 
-    if st.button("Are you ready?"):
-        # store user input in session state
-        st.session_state.user_id = user_id_input
-        st.session_state.num_recommendations = movie_suggestions
-
-        # force an update by setting a dummy value in the session state
-        st.session_state["trigger"] = not st.session_state.get("trigger", False)
-
-        # switch to recommendations page
-        st.session_state.page = "recommendations"
-
-        if st.button("Let's see some recommendations!"):
-            st.session_state.page = "recommendations"
-
-
-
-
-
-
-##### RECOMMENDATIONS PAGE #####
+##### RECOMMENDATION PAGE #####
 
 def recommendations_page():
-    st.title("Alright, let's watch some movies!")
+    st.title("Alright, let me see what I can do for you...")
 
     # retrieve user input from session state
-    user_id = st.session_state.get("user_id", 0)
+    user_id = st.session_state.get("user_id", "N/A")
     num_recommendations = st.session_state.get("num_recommendations", 0)
 
     # API call to predict
@@ -193,12 +138,8 @@ def recommendations_page():
     response = requests.get(api_url, params=params)
 
     # TMDB API key
-#    API_key = os.getenv("TMDB_API_KEY")       # this is for local use
-    API_key = st.secrets["TMDB_API_KEY"]    # this is for the streamlit cloud app
-
-
-
-
+    API_key = os.getenv("TMDB_API_KEY")       # this is for local use
+#    API_key = st.secrets["TMDB_API_KEY"]    # this is for the streamlit cloud app
 
 
 
@@ -251,24 +192,69 @@ def recommendations_page():
 
 
 
-
-
-
-
-
-
     # our predictions
     if response.status_code == 200:
         titles, tmdb_ids, history_titles, history_tmdb_ids, history_ratings = response.json()
+        # creating columns for the posters
+#        cols = st.columns(5)
 
+#       no need for this,it is just the table of predictions
+#        st.write(titles)
+
+
+# rating history of user
+        if len(history_titles) > 5:
+
+            st.markdown(
+            f"""
+            ### Your rating history looks interesting! You have rated {len(history_titles)} movies! Let's see some of them:
+            """,
+            unsafe_allow_html=True
+            )
+
+            for index in range(5):
+                # st.write(f"You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0.")
+                # st.markdown(f'<p style="font-size:12px;">{comment(history_ratings[index])}</p>', unsafe_allow_html=True)
+
+                st.markdown(f'''
+                                You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0.
+                                <span style="font-size:12px;">{comment(history_ratings[index])}</span>
+                            ''', unsafe_allow_html=True)
+
+            st.markdown('<p style="font-size:26px;">OK, great, I got you! According to your history, here are my suggestions:</p>', unsafe_allow_html=True)
+
+        elif len(history_titles) > 1:
+
+            st.markdown(
+            f"""
+            ### You have only rated {len(history_titles)} movies! Let's see them:
+            """,
+            unsafe_allow_html=True
+            )
+            for index in range(len(history_titles)):
+                st.write(f"You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0")
+
+            st.markdown("""<p style="font-size:24px;">Your rating history is rather small, but hey don't worry, I got you covered! Here are my suggestions:</p>""", unsafe_allow_html=True)
+#            st.write("Your rating history is rather small, but hey don't worry, I got you covered! Here are my suggestions:")
+
+        else:
+            st.markdown(
+            f"""
+            ### Aaah you must be new around here, you have not rated any movies! Alright, here are some suggestions to get you started:
+            """,
+            unsafe_allow_html=True
+            )
+
+
+# suggestions
         for idx, movie in enumerate(titles):
             # Create a transparent tile for each recommendation
             st.markdown(f'<div class="recommendation-tile">', unsafe_allow_html=True)
 
             with st.container():
-                col1, col2 = st.columns([1, 2])  # adjusting width ratio
+                col1, col2 = st.columns([1, 2])  # Adjust width ratio
 
-                # poster column
+                # Poster column
                 with col1:
                     st.markdown('<div class="poster">', unsafe_allow_html=True)
 
@@ -282,34 +268,34 @@ def recommendations_page():
                         poster_path = image_data_tmdb["posters"][0]["file_path"]
                         base_url = "https://image.tmdb.org/t/p/w500"
                         full_poster_url = f"{base_url}{poster_path}"
-                        st.image(full_poster_url, width=250)  # poster width
+                        st.image(full_poster_url, width=250)  # Poster width
                     else:
-                        st.image("fallback_image_url", width=250)  # fallback image
+                        st.image("fallback_image_url", width=250)  # Fallback image
 
                     st.markdown('</div>', unsafe_allow_html=True)
 
-                # movie details column
+                # Movie details column
                 with col2:
                     st.markdown('<div class="details">', unsafe_allow_html=True)
 
-                    # movie details
+                    # Fetch and display movie details
                     tmdb_url_details = f"https://api.themoviedb.org/3/movie/{tmdb_ids[idx]}?language=en-US"
                     tmdb_response_details = requests.get(tmdb_url_details, headers=headers)
                     tmdb_json = tmdb_response_details.json()
 
                     if tmdb_response_details.status_code == 200:
-                        # transparent background applied only to the title!
+                        # Transparent background applied only to the title
                         st.markdown(f'<p class="movie-title">{movie}</p>', unsafe_allow_html=True)
                         st.markdown(f'<p class="overview">{tmdb_json.get("overview", "No overview available.")}</p>', unsafe_allow_html=True)
                         st.markdown(f'<p class="runtime">Runtime: {tmdb_json.get("runtime", "N/A")} minutes</p>', unsafe_allow_html=True)
 
-                        # genres
+                        # Display genres
                         genres = tmdb_json.get('genres', [])
                         genre_list = [genre["name"] for genre in genres]
                         genre_string = ", ".join(genre_list) if genre_list else "N/A"
                         st.markdown(f'<p class="genres">Genre(s): {genre_string}</p>', unsafe_allow_html=True)
 
-                        # rating
+                        # Display score
                         st.markdown(f'<p class="score">Score on TMDB: {round(tmdb_json.get("vote_average", 0), 2)}/10 from {tmdb_json.get("vote_count", 0)} votes</p>', unsafe_allow_html=True)
 
                     else:
@@ -332,8 +318,8 @@ def recommendations_page():
         st.session_state.page = "input"
 
 
-##### PAGE HANDLING #####
 
+# page displayed
 if "page" not in st.session_state:
     st.session_state.page = "input"
 
