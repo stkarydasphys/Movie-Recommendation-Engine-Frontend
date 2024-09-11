@@ -138,12 +138,12 @@ def recommendations_page():
 #                    st.markdown(f'<p style="background-color:black;">Overview: {tmdb_json.get("overview")}</p>', unsafe_allow_html=True)   # overview with background
                     st.markdown(f'''
                                     <div style="
-                                        background-color: rgba(255, 255, 255, 0.2);  /* Semi-transparent background */
+                                        background-color: rgba(255, 255, 255, 0.1);  /* Semi-transparent background */
                                         backdrop-filter: blur(10px);  /* Blur effect */
                                         padding: 10px;  /* Some padding for better spacing */
                                         border-radius: 10px;  /* Optional: Rounded corners */
                                     ">
-                                        <p style="font-size:18px; color:black;">Overview: {tmdb_json.get("overview")}</p>
+                                        <p style="font-size:18px; color:white;">Overview: {tmdb_json.get("overview")}</p>
                                     </div>
                                 ''', unsafe_allow_html=True)
                     st.write(f"Runtime: {tmdb_json.get('runtime')} minutes")
