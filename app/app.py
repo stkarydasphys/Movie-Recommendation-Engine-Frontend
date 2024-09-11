@@ -90,7 +90,7 @@ def recommendations_page():
 
             with col1:
                 # API request to TMDB to fetch poster
-                tmdb_url_image = f"https://api.themoviedb.org/3/movie/{tmdb_ids[idx]}/images"
+                tmdb_url_image = f"https://api.themoviedb.org/3/movie/{tmdb_ids[idx]}/images?language=en"
                 headers = {
                             "accept": "application/json",
                             "Authorization": f"Bearer {API_key}"
