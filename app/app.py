@@ -126,8 +126,8 @@ def recommendations_page():
     response = requests.get(api_url, params=params)
 
     # TMDB API key
-    API_key = os.getenv("TMDB_API_KEY")       # this is for local use
-#    API_key = st.secrets["TMDB_API_KEY"]    # this is for the streamlit cloud app
+#    API_key = os.getenv("TMDB_API_KEY")       # this is for local use
+    API_key = st.secrets["TMDB_API_KEY"]    # this is for the streamlit cloud app
 
 
 
