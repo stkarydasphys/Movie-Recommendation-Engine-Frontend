@@ -125,8 +125,8 @@ def input_page():
 
                 for index in range(10):
                     st.markdown(f'''
-                                You watched <span style="font-size:20px; font-weight:bold;">{history_titles[index]}</span>
-                                and rated it <span style="font-size:20px; font-weight:bold;">{history_ratings[index]}/5.0</span>.
+                                You watched <span style="font-size:24px; font-weight:bold;">{history_titles[index]}</span>
+                                and rated it <span style="font-size:24px; font-weight:bold;">{history_ratings[index]}/5.0</span>.
                                 <br>
                                 <span style="font-size:14px;">"{comment(history_ratings[index])}"</span>
                             ''', unsafe_allow_html=True)
