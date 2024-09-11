@@ -26,6 +26,20 @@ background_image = """
 st.markdown(background_image, unsafe_allow_html=True)
 
 
+
+# changing the fonts with CSS
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Anton', sans-serif;
+        font-size: 22px;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 ##### INPUT PAGE #####
 
 def input_page():
