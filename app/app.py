@@ -132,7 +132,8 @@ def recommendations_page():
                 tmdb_json = tmdb_response_details.json()
 
                 if tmdb_response_details.status_code == 200:
-                    st.write(f"**{movie}**")  # Movie title
+#                    st.write(f"**{movie}**")  # Movie title
+                    st.markdown('<p style="font-size:30px; text-decoration:underline;">f"**{movie}**"</p>', unsafe_allow_html=True)
                     st.write(f"Overview: {tmdb_json.get('overview')}")
                     st.write(f"Runtime: {tmdb_json.get('runtime')} minutes")
 
