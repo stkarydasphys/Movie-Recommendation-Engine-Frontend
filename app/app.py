@@ -125,9 +125,12 @@ def input_page():
 
                 for index in range(10):
                     st.markdown(f'''
-                                    You watched {history_titles[index]} and rated it {history_ratings[index]}/5.0.
-                                    <span style="font-size:12px;">{comment(history_ratings[index])}</span>
-                                ''', unsafe_allow_html=True)
+                                <p style="font-size:20px;">
+                                    You watched <strong>{history_titles[index]}</strong> and rated it <strong>{history_ratings[index]}/5.0</strong>.
+                                </p>
+                                <span style="font-size:14px;">"{comment(history_ratings[index])}"</span>
+                            ''', unsafe_allow_html=True)
+
 
                 st.markdown("""<p style="font-size:26px;">OK, great, I got you! Let's see my suggestions according to your history</p>""", unsafe_allow_html=True)
 
