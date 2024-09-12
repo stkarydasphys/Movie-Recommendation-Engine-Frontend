@@ -53,7 +53,11 @@ good_comments = [
     "Good one.",
     "Not a fan, but hey, whatevz!",
     "Good!",
-    "Classic!"
+    "Classic!",
+    "Riiiight...",
+    "Liked it.",
+    "Yup, OK, I can see why.",
+    "I mean, my girlfriend Siri and her friend Alexa liked it, but whatever",
 ]
 
 average_comments = [
@@ -67,20 +71,50 @@ average_comments = [
     "Not that bad, come on!",
     "Well, i liked it...",
     "Haven't seen it",
-    "LOL yeah.",
-    "I see."
+    "LOL, yeah!",
+    "I see.",
+    "Nooo, really?",
+    "Oh yeah? Not good enough for you? Fancypants..."
+    "Agree to disagree",
+    "I'll pretend I didn't see that.",
+    "Understandable.",
+    "Sure, yeah.",
+    "OMG, do you even have a heart?",
+    "Hey, you know what? I don't think this is gonna work out, there's other recommenders you can try, this is a free market after all!"
 ]
 
+used_good_comments = []
+used_average_comments = []
+
 # function commenting on user's ratings
+
+
+# Function commenting on user's ratings
 def comment(rating):
+    global good_comments, average_comments, used_good_comments, used_average_comments
+
     if rating >= 4.0:
-        return random.choice(good_comments)
+        # if all comments have been used it resets the list
+        if not good_comments:
+            good_comments, used_good_comments = used_good_comments, []
+        # choosing a random comment and moves it to the other list
+        comment = random.choice(good_comments)
+        good_comments.remove(comment)
+        used_good_comments.append(comment)
+        return comment
+
     elif rating > 1:
-        return random.choice(average_comments)
+        # if all comments have been used it resets the list
+        if not average_comments:
+            average_comments, used_average_comments = used_average_comments, []
+        # choosing a random comment and moves it to the other list
+        comment = random.choice(average_comments)
+        average_comments.remove(comment)
+        used_average_comments.append(comment)
+        return comment
+
     else:
         return "Ouch!"
-
-
 
 
 
@@ -98,12 +132,17 @@ def input_page():
     )
 
     # user input
-    user_id_input = st.number_input("And who might you be? (User ID)",
-                                min_value = 0,
-                                max_value = 2000,
-                                step = 1)
+    # user_id_input = st.number_input("And who might you be? (User ID)",
+    #                             min_value = 0,
+    #                             max_value = 2000,
+    #                             step = 1)
 
-    movie_suggestions = st.slider('How many movies would you like me to suggest?', 1, 15, 1)
+    # movie_suggestions = st.slider('How many movies would you like me to suggest?', 1, 15, 1)
+    st.markdown("<h3>And who might you be? (User ID)</h3>", unsafe_allow_html=True)
+    user_id_input = st.number_input("", min_value=0, max_value=2000, step=1)
+
+    st.markdown("<h3>How many movies would you like me to recommend?</h3>", unsafe_allow_html=True)
+    movie_suggestions = st.slider("", 1, 15, 1)
 
     # button that triggers history to appear
     if st.button("Your Rating History"):
