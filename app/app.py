@@ -128,7 +128,7 @@ def input_page():
                                 You watched <span style="font-size:24px; font-weight:bold;">{history_titles[index]}</span>
                                 and rated it <span style="font-size:24px; font-weight:bold;">{history_ratings[index]}/5.0</span>.
                                 <br>
-                                <span style="font-size:14px;">"{comment(history_ratings[index])}"</span>
+                                <span style="font-size:14px;">{comment(history_ratings[index])}</span>
                             ''', unsafe_allow_html=True)
 
 
@@ -161,21 +161,13 @@ def input_page():
     #     st.session_state.page = "recommendations"
 
 
-    if st.button("Are you ready?"):
-        # store user input in session state
+
+    if st.button("Let's see some recommendations!"):
+        st.session_state.page = "recommendations"
         st.session_state.user_id = user_id_input
         st.session_state.num_recommendations = movie_suggestions
-
-        # force an update by setting a dummy value in the session state
-        st.session_state["trigger"] = not st.session_state.get("trigger", False)
-
-        # switch to recommendations page
         st.session_state.page = "recommendations"
-
-        if st.button("Let's see some recommendations!"):
-            st.session_state.page = "recommendations"
-
-
+        st.rerun()
 
 
 
